@@ -30,7 +30,7 @@ module.exports = {
                 const embed = new EmbedBuilder()
                 .setColor(color)
                 .setTitle(`${options.host}:${options.port}`)
-                .setDescription('Server is offline');
+                .setDescription('Servidor Apagado');
         
                 return message.channel.send({ embeds: [embed] });
             }
@@ -42,10 +42,10 @@ module.exports = {
 
                 if(query['online'] > 0) {
                     if (query['online'] > 100) {
-                        embed.addFields({ name: 'PLAYERS LIST', value: '*El número de jugadores es más de 100. ¡No puedo enumerarlas!*' });
+                        embed.addFields({ name: 'Lista de Jugadores', value: '*El número de jugadores es más de 100. ¡No puedo enumerarlas!*' });
                     }
                     else if (query['players'].length == 0) {
-                        embed.addFields({ name: 'PLAYERS LIST', value: '*No pude obtener la lista de jugadores. Intentar otra vez...*' });
+                        embed.addFields({ name: 'Lista de Jugadores', value: '*No pude obtener la lista de jugadores. Intentar otra vez...*' });
                     }
                     else {
                         if(query['online'] > 0){

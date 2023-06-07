@@ -32,15 +32,15 @@ module.exports = {
                     .setColor(color)
                     .setTitle(`**${query['hostname']}**`)
                     .addFields(
-                        {name: 'IP:PORT', value: `${options.host}:${options.port}`, inline: true},
-                        {name: 'PLAYERS', value: `${query['online'] || 0}/${query['maxplayers'] || 0}`, inline: true},
-                        {name: 'GAMEMODE', value: query['gamemode'] || '-', inline: true},
-                        {name: 'MAP', value: query['rules']['mapname'] || '-', inline: true},
-                        {name: 'LANGUAGE', value: query['language'] || '-', inline: true},
-                        {name: 'TIME - WEATHER', value: query['rules']['worldtime']+' - '+query['rules']['weather'], inline: true},
-                        {name: 'VERSION', value: query['rules']['version'] || '-', inline: true},
-                        {name: 'PASSWORD', value: pass, inline: true},
-                        {name: 'URL', value: `[${query['rules']['weburl']}](https://${query['rules']['weburl'] || 'https://sa-mp.com'})`, inline: true}
+                        {name: 'IP', value: `${options.host}:${options.port}`, inline: true},
+                        {name: 'Jugadores', value: `${query['online'] || 0}/${query['maxplayers'] || 0}`, inline: true},
+                        {name: 'Gamemode', value: query['gamemode'] || '-', inline: true},
+                        {name: 'Mapa', value: query['rules']['mapname'] || '-', inline: true},
+                        {name: 'Lenguaje', value: query['language'] || '-', inline: true},
+                        {name: 'Clima', value: query['rules']['worldtime']+' - '+query['rules']['weather'], inline: true},
+                        {name: 'Version', value: query['rules']['version'] || '-', inline: true},
+                        {name: 'Contraseña', value: pass, inline: true},
+                        {name: 'Link', value: `[${query['rules']['weburl']}](https://${query['rules']['weburl'] || 'https://sa-mp.com'})`, inline: true}
                     );
     
                 return message.channel.send({ embeds: [embed] });
