@@ -56,7 +56,7 @@ client.on('messageCreate', async message => {
 
         console.error(error);
 
-        message.reply('An error occurred!');
+        message.reply('Lo siento, acaba de ocurrir un error!');
     }
 });
 
