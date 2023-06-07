@@ -1,10 +1,18 @@
-module.export = async ( message ) => {
-    const user = message.mentions.users.first() || message.author; // Menciones del mensaje
+const { EmbedBuilder } = require('discord.js');
 
-    const embed = {
-        description: 'Avatar de $(user.username)',
-        image: {url: user.displayAvatarURL({ dynamic: true, size: 1024})} // Función displayAvatarURL
+const embed = new EmbedBuilder();
 
-    };
-    message.reply({embeds: [embed]})
+module.exports = {
+    name: 'avatar',
+    aliases: [],
+    description: 'Para ver el avatar de los usuarios',
+    run: async (client, message, args) => {
+
+        const user = message.mentions.users.first() || message.author;
+        const color = await message.guild?.members.fetch(message.client.user.id).then(color => color.displayHexColor) || '#000000';
+        embed.setColor(color);
+        embed.setTitle('Avatar de $(user.username)');
+        embed.setImage(user.displayAvatarURL({ dynamic: true, size: 1024}));
+        return message.channel.send({ embeds: [embed] });   
+    }
 };
