@@ -6,7 +6,7 @@ const embed = new EmbedBuilder();
 module.exports = {
     name: 'ip',
     aliases: [],
-    description: 'Shows IP address of a SA:MP Server',
+    description: 'Para ver la IP del servidor',
     run: async (client, message, args) => {
         if(!process.env.SAMP_IP)
             return message.channel.send('Debes coloar la ip en .env');
