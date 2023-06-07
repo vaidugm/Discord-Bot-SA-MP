@@ -1,39 +1,65 @@
+const Discord = require('discord.js');
 const fs = require('node:fs');
-const path = require('node:path');
-const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
+const TOKEN = ('MTAwODg5NTc5NTkzMzc1MzQ3NQ.GqWAKq.eTBa5jC0w6k67YT3TjrD48cZdOApQDAqX7kEAw');
+require('colors');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+ClientID = "1008895795933753475"
+GuildIdD = "824375415258873917"
 
-client.commands = new Collection();
-const foldersPath = path.join(__dirname, 'commands');
-const commandFolders = fs.readdirSync(foldersPath);
+// definir cliente
+const Client = new Discord.Client({
+    intents: 3276799   
+});
 
-for (const folder of commandFolders) {
-	const commandsPath = path.join(foldersPath, folder);
-	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-	for (const file of commandFiles) {
-		const filePath = path.join(commandsPath, file);
-		const command = require(filePath);
-		if ('data' in command && 'execute' in command) {
-			client.commands.set(command.data.name, command);
-		} else {
-			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
-		}
-	}
-}
 
-const eventsPath = path.join(__dirname, 'events');
-const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+// contenido --------------------------------------------------------------------------------------------------
 
-for (const file of eventFiles) {
-	const filePath = path.join(eventsPath, file);
-	const event = require(filePath);
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args));
-	} else {
-		client.on(event.name, (...args) => event.execute(...args));
-	}
-}
+Client.on('ready', async (client) => {
+    console.log('✅ Ready'.bgGreen)
+});
 
-client.login(token);
+
+//COMMAND HANDLER --------------------------------------------------------------------------------------------
+Client.on("messageCreate", async ( message ) => {
+    if(message.author.bot) return;
+    if(!message.content.startsWith("!")) return;
+
+    //HANDLER
+    try {
+        const command = message.content.toLowerCase().slice(1).split(' ')[0];
+        console.log(command)
+        const executecommand = require(`./commands/${command}.js`); // Comillas invertidas
+        executecommand( message );
+    } catch (error) {
+        console.log(error)
+    }
+});
+// SLASH HANDLER ---------------------------------------------------------------------------------------------
+
+let commands = [];
+fs.readdirSync('slash')
+    .forEach((file) => {
+        const command = require(`./slash/${file}`);
+        commands.push(command.data.toJSON());
+    });
+
+const REST = new Discord.REST({version: '9'}).setToken(TOKEN);
+(async () => {
+    try{
+        console.log('⏳ Actualizando los slashCommands (/).'.bgYellow);
+
+        await REST.put(
+            Discord.Routes.applicationGuildCommands(ClientID, GuildIdD),
+            { body: commands },
+        );
+
+        console.log('✅ slashCommands actualizados!'.bgGreen)
+    }catch(e){
+        console.error(e);
+    }
+})();
+
+// contenido -------------------------------------------------------------------------------------------------
+
+// conectar
+Client.login(TOKEN);
