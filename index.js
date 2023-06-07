@@ -1,65 +1,66 @@
-const Discord = require('discord.js');
-const fs = require('node:fs');
-const TOKEN = ('MTAwODg5NTc5NTkzMzc1MzQ3NQ.GqWAKq.eTBa5jC0w6k67YT3TjrD48cZdOApQDAqX7kEAw');
-require('colors');
+require('dotenv').config();
+const { readdirSync } = require('fs');
+const { Client, Collection, GatewayIntentBits, Partials, ActivityType, ChannelType } = require('discord.js');
 
-ClientID = "1008895795933753475"
-GuildIdD = "824375415258873917"
-
-// definir cliente
-const Client = new Discord.Client({
-    intents: 3276799   
+const client = new Client({
+    failIfNotExists: false,
+    partials: [
+        Partials.Channel
+    ],
+    intents: [
+        GatewayIntentBits.DirectMessages, // comment or remove this if bot shouldn't receive DM messages
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ]
 });
 
+client.commands = new Collection();
+const pCommandFiles = readdirSync('./commands').filter(file => file.endsWith('.js'));
 
-// contenido --------------------------------------------------------------------------------------------------
+for (const file of pCommandFiles) {
+    const command = require(`./commands/${file}`);
+    client.commands.set(command.name, command);
+}
 
-Client.on('ready', async (client) => {
-    console.log('✅ Ready'.bgGreen)
+client.once('ready', async () => {
+    console.log(`${client.user.username} is ready!`);
+    client.user.setActivity("SA-MP", { type: ActivityType.Competing }); // use ActivityType enum to change it to Watching, Playing or Listening
 });
 
+client.on('messageCreate', async message => {
+    if (message.author.bot) return;
 
-//COMMAND HANDLER --------------------------------------------------------------------------------------------
-Client.on("messageCreate", async ( message ) => {
-    if(message.author.bot) return;
-    if(!message.content.startsWith("!")) return;
+    if(!message.content.toLowerCase().startsWith(process.env.PREFIX.toLowerCase())) return;
 
-    //HANDLER
-    try {
-        const command = message.content.toLowerCase().slice(1).split(' ')[0];
-        console.log(command)
-        const executecommand = require(`./commands/${command}.js`); // Comillas invertidas
-        executecommand( message );
-    } catch (error) {
-        console.log(error)
-    }
-});
-// SLASH HANDLER ---------------------------------------------------------------------------------------------
+    const args = message.content.slice(process.env.PREFIX.length).split(/ +/);
+    const commandName = args.shift().toLowerCase();
 
-let commands = [];
-fs.readdirSync('slash')
-    .forEach((file) => {
-        const command = require(`./slash/${file}`);
-        commands.push(command.data.toJSON());
-    });
+    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-const REST = new Discord.REST({version: '9'}).setToken(TOKEN);
-(async () => {
+    if (!command) return;
+
     try{
-        console.log('⏳ Actualizando los slashCommands (/).'.bgYellow);
+        await command.run(client, message, args);
 
-        await REST.put(
-            Discord.Routes.applicationGuildCommands(ClientID, GuildIdD),
-            { body: commands },
-        );
-
-        console.log('✅ slashCommands actualizados!'.bgGreen)
-    }catch(e){
-        console.error(e);
+        if(message.channel.type == ChannelType.DM)
+            console.log(`[CMD_DM] ${message.author.tag} (${message.author.id}) | ${message.content}`);
+        else
+            console.log(`[CMD] ${message.guild.name}(${message.guild.id}) | ${message.author.tag}(${message.author.id}) | ${message.content}`);
     }
-})();
+    catch (error){
+        if(message.channel.type == ChannelType.DM)
+            console.log(`[CMD_DM_ERR] ${message.author.tag} (${message.author.id}) | ${message.content}`);
+        else
+            console.log(`[CMD_ERR] ${message.guild.name}(${message.guild.id}) | ${message.author.tag}(${message.author.id}) | ${message.content}`);
 
-// contenido -------------------------------------------------------------------------------------------------
+        console.error(error);
 
-// conectar
-Client.login(TOKEN);
+        message.reply('An error occurred!');
+    }
+});
+
+client.on('warn', console.warn);
+client.on('error', console.error);
+
+client.login(process.env.BOT_TOKEN);
