@@ -25,7 +25,7 @@ for (const file of pCommandFiles) {
 
 client.once('ready', async () => {
     console.log(`${client.user.username} is ready!`);
-    client.user.setActivity("SA-MP", { type: ActivityType.Competing }); // use ActivityType enum to change it to Watching, Playing or Listening
+    client.user.setActivity("TroubleZone Rp", { type: ActivityType.Watching }); // use ActivityType enum to change it to Watching, Playing or Listening
 });
 
 client.on('messageCreate', async message => {

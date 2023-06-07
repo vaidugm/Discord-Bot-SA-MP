@@ -9,7 +9,7 @@ module.exports = {
     description: 'Shows IP address of a SA:MP Server',
     run: async (client, message, args) => {
         if(!process.env.SAMP_IP)
-            return message.channel.send('IP address is not set in the .env file!');
+            return message.channel.send('Debes coloar la ip en .env');
 
         const ip = process.env.SAMP_IP.split(':');
         const options = {
@@ -21,13 +21,13 @@ module.exports = {
         await samp(options, (error, query) => {
             if(error){
                 embed.setColor(color);
-                embed.setTitle('Server is offline');
+                embed.setTitle('Servidor Apgado');
                 embed.setDescription(`**IP:** \`${options.host}:${options.port}\``);
                 return message.channel.send({ embeds: [embed] });
             }
             else{
                 embed.setColor(color);
-                embed.setTitle('Server is online!');
+                embed.setTitle('Servidor en linea!');
                 embed.setDescription(`**IP:** \`${options.host}:${options.port}\``);
                 return message.channel.send({ embeds: [embed] });
             }

@@ -4,10 +4,10 @@ const samp = require('samp-query');
 module.exports = {
     name: 'server',
     aliases: [],
-    description: 'Displays informations about SA:MP Server',
+    description: 'Muestra información sobre el servidor SA:MP',
     run: async (client, message, args) => {
         if(!process.env.SAMP_IP)
-            return message.channel.send('IP address is not set in the .env file!');
+            return message.channel.send('Debes coloar la ip en .env!');
 
         const color = await message.guild?.members.fetch(message.client.user.id).then(color => color.displayHexColor) || '#000000';
 

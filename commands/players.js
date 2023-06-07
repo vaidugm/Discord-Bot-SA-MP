@@ -5,10 +5,10 @@ const AsciiTable = require('ascii-table');
 module.exports = {
     name: 'players',
     aliases: ['player'],
-    description: 'Lists all online players if players number is lower or equal 100',
+    description: 'Enumera todos los jugadores en línea si el número de jugadores es inferior o igual a 100',
     run: async (client, message, args) => {
         if(!process.env.SAMP_IP)
-            return message.channel.send('IP address is not set in the .env file!');
+            return message.channel.send('Debes coloar la ip en .env!');
 
             const color = await message.guild?.members.fetch(message.client.user.id).then(color => color.displayHexColor) || '#000000';
 
@@ -42,10 +42,10 @@ module.exports = {
 
                 if(query['online'] > 0) {
                     if (query['online'] > 100) {
-                        embed.addFields({ name: 'PLAYERS LIST', value: '*Number of players is grather than 100. I cannot list them!*' });
+                        embed.addFields({ name: 'PLAYERS LIST', value: '*El número de jugadores es más de 100. ¡No puedo enumerarlas!*' });
                     }
                     else if (query['players'].length == 0) {
-                        embed.addFields({ name: 'PLAYERS LIST', value: '*I could not get the players list. Try again...*' });
+                        embed.addFields({ name: 'PLAYERS LIST', value: '*No pude obtener la lista de jugadores. Intentar otra vez...*' });
                     }
                     else {
                         if(query['online'] > 0){
@@ -92,7 +92,7 @@ module.exports = {
                     return message.channel.send({ embeds: [embed] });
                 }
                 else if (query['online'] == 0) {
-                    embed.addFields({ name: 'PLAYERS LIST', value: '*Server is empty*'});
+                    embed.addFields({ name: 'PLAYERS LIST', value: '*el servidor esta vacio*'});
                     return message.channel.send({ embeds: [embed] });
                 }
             }
