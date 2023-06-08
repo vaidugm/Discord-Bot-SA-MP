@@ -11,7 +11,7 @@ module.exports = {
         const user = message.mentions.users.first() || message.author;
         const color = await message.guild?.members.fetch(message.client.user.id).then(color => color.displayHexColor) || '#000000';
         embed.setColor(color);
-        embed.setTitle('Avatar de $(user.username)');
+        embed.setTitle(`Avatar de ${user.username}`);
         embed.setImage(user.displayAvatarURL({ dynamic: true, size: 1024}));
         return message.channel.send({ embeds: [embed] });   
     }
