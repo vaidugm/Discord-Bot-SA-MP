@@ -5,6 +5,7 @@ Este es un bot para servidores de SA-MP
 
 Tienes comandos de !server !ip !players
 Cuenta con un menu de ayuda !ayuda
+Comandos de moderacion
   
  # Configuracion
  
